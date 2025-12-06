@@ -52,6 +52,11 @@
                         <label class="form-label">Màu sắc</label>
                         <input type="text" name="mau_sac[]" class="form-control" placeholder="Ví dụ: Đỏ" required>
                     </div>
+
+                    <div class="col-md-4">
+                        <label class="form-label">Ảnh cho màu này</label>
+                        <input type="file" name="anh_mau[]" class="form-control" accept="image/*">
+                    </div>
                 </div>
 
                 <div class="row g-2">

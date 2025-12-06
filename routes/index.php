@@ -1,31 +1,23 @@
 <?php
 
-
-// Lấy tham số router
 $admin = $_GET['admin'] ?? null;
-$page = $_GET['page'] ?? null;
+$page  = $_GET['page'] ?? null;
 
-// Nếu là admin
+# ==========================
+#    ADMIN AREA – CHECK ROLE
+# ==========================
 if ($admin) {
 
-    // // Kiểm tra quyền truy cập admin
-    // if (!isset($_SESSION["user"]) || $_SESSION["user"]["role"] !== "admin") {
-    //     echo "Bạn không có quyền truy cập khu vực quản trị!";
-    //     exit;
-    // }
+    if (!isset($_SESSION["user"]) || $_SESSION["user"]["role"] !== "admin") {
+        echo "Bạn không có quyền truy cập khu vực quản trị!";
+        exit;
+    }
 
     switch ($page) {
-
-        case "dashboard":
-            require_once "./controllers/admin/DashboardController.php";
-            $ctl = new DashboardController();
-            $ctl->index();
-            break;
 
         case "category":
             require_once "./controllers/admin/CategoryController.php";
             $ctl = new CategoryController();
-
             $action = $_GET["action"] ?? "index";
 
             switch ($action) {
@@ -37,46 +29,23 @@ if ($admin) {
             break;
 
         case "product":
-    require_once "./controllers/admin/ProductController.php";
-    $ctl = new ProductController();
+            require_once "./controllers/admin/ProductController.php";
+            $ctl = new ProductController();
+            $action = $_GET["action"] ?? "index";
 
-    $action = $_GET['action'] ?? 'index';
-
-    switch ($action) {
-        case 'create':
-            $ctl->create();
-            break;
-
-        case 'store':
-            if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-                $ctl->store();
+            switch ($action) {
+                case "create": $ctl->create(); break;
+                case "store": $ctl->store(); break;
+                case "update": $ctl->update(); break;
+                case "delete": $ctl->delete(); break;
+                default: $ctl->index(); break;
             }
             break;
 
-        case 'update':
-            if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-                $ctl->update();
-            }
+        case "get":
+            $ctl->get();
             break;
-
-        case 'delete':
-            if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-                $ctl->delete();
-            }
-            break;
-
-        default:
-            $ctl->index(); // trang liệt kê sản phẩm
-            break;
-    }
-    break;
-
-        case "orders":
-            require_once "./controllers/admin/OrderController.php";
-            $ctl = new OrderController();
-            $ctl->index();
-            break;
-
+            
         default:
             echo "404 - Admin Page Not Found!";
             break;
@@ -85,30 +54,52 @@ if ($admin) {
     exit;
 }
 
-// // Nếu không phải admin → đến CLIENT
-// switch ($page) {
 
-//     case "shop":
-//         require_once "./controllers/client/ShopController.php";
-//         $ctl = new ShopController();
-//         $ctl->index();
-//         break;
+# =============================
+#        AUTH ROUTES
+# =============================
+switch ($page) {
 
-//     case "cart":
-//         require_once "./controllers/client/CartController.php";
-//         $ctl = new CartController();
-//         $ctl->index();
-//         break;
+    case "login":
+        require "./controllers/AuthController.php";
+        (new AuthController())->showLogin();
+        break;
 
-//     case "contact":
-//         require_once "./controllers/client/ContactController.php";
-//         $ctl = new ContactController();
-//         $ctl->index();
-//         break;
+    case "doLogin":
+        require "./controllers/AuthController.php";
+        (new AuthController())->login();
+        break;
 
-//     default:
-//         require_once "./controllers/client/HomeController.php";
-//         $ctl = new HomeController();
-//         $ctl->index();
-//         break;
-// }
+    case "register":
+        require "./controllers/AuthController.php";
+        (new AuthController())->showRegister();
+        break;
+
+    case "doRegister":
+        require "./controllers/AuthController.php";
+        (new AuthController())->register();
+        break;
+
+    case "logout":
+        require "./controllers/AuthController.php";
+        (new AuthController())->logout();
+        break;
+
+        // 💥 SHOP PAGE CLIENT
+    case "shop":
+        require "./controllers/client/ShopController.php";
+        (new ShopController())->index();
+        break;
+
+    
+    case "product-detail":
+        require "./controllers/client/ShopController.php";
+        (new ShopController())->detail();
+        break;
+
+    default:
+        require "./controllers/client/HomeController.php";
+        (new HomeController())->index();
+        break;
+}
+

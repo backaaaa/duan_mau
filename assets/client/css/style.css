@@ -4,6 +4,44 @@ body {
 	font-family: "Nunito Sans", sans-serif;
 	-webkit-font-smoothing: antialiased;
 }
+.product__details__option__size label input {
+    display: none;
+}
+.product__details__option__size label {
+    cursor: pointer;
+    padding: 6px 10px;
+    border: 1px solid #aaa;
+    margin-right: 4px;
+    border-radius: 4px;
+}
+.product__details__option__size label.active {
+    background: #111;
+    color: #fff;
+    border-color: #111;
+}
+
+
+.pro-qty {
+    display: flex;
+    flex-direction: column;
+    width: 50px;
+    border: 1px solid #e5e5e5;
+    text-align: center;
+}
+
+.pro-qty input {
+    width: 100%;
+    border: none;
+    text-align: center;
+    font-size: 16px;
+}
+
+.pro-qty .qtybtn {
+    padding: 8px 0;
+    cursor: pointer;
+    background: #f7f7f7;
+    font-size: 14px;
+}
 
 h1,
 h2,
